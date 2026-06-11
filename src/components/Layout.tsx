@@ -3,12 +3,16 @@
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-full flex flex-col">
-      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/85 backdrop-blur">
-        <div className="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+      {/* Slim top accent bar (casebasix-style) */}
+      <div className="h-1 bg-gradient-to-r from-brand-dark via-brand to-brand-light" />
+
+      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/90 backdrop-blur">
+        {/* Full-bleed bar — logo flush left, nav flush right, like casebasix */}
+        <div className="px-6 h-14 flex items-center justify-between">
           <a href="/" className="font-bold tracking-tight text-neutral-900 no-underline">
             Consulting <span className="text-brand">Personality</span> Practice
           </a>
-          <nav className="text-sm text-neutral-500 flex gap-4">
+          <nav className="text-sm font-medium text-neutral-500 flex gap-5">
             <a className="hover:text-brand" href="/?quiz-id=personality-test-1.yaml">Test 1</a>
             <a className="hover:text-brand" href="/?quiz-id=personality-test-2.yaml">Test 2</a>
           </nav>
@@ -18,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
 
       <footer className="border-t border-neutral-200 bg-white">
-        <div className="max-w-2xl mx-auto px-5 py-5 text-xs text-neutral-400">
+        <div className="max-w-6xl mx-auto px-6 py-5 text-xs text-neutral-400">
           Independent practice tool. Not affiliated with or endorsed by Boston Consulting Group or
           SHL. Questions are original practice material modelled on the publicly described format.
         </div>

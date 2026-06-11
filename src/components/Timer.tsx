@@ -18,7 +18,11 @@ export default function Timer({ seconds, onExpire }: { seconds: number; onExpire
   const ss = String(left % 60).padStart(2, "0");
   const low = left <= 30;
   return (
-    <span className={`tabular-nums font-semibold ${low ? "text-red-600" : "text-neutral-700"}`}>
+    <span
+      className={`inline-block rounded-lg px-4 py-1 text-base font-bold tabular-nums text-white ${
+        low ? "bg-red-600" : "bg-brand"
+      }`}
+    >
       {mm}:{ss}
     </span>
   );
