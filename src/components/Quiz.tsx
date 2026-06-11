@@ -9,7 +9,6 @@ import {
 } from "../types";
 import { scoreQuiz, type TraitProfile } from "../lib/scoring";
 import Html from "./Html";
-import Timer from "./Timer";
 import Disclaimer from "./Disclaimer";
 
 const LIKERT = [
@@ -35,9 +34,8 @@ export default function QuizRunner({
   quiz: Quiz;
   onFinish: (profile: TraitProfile) => void;
 }) {
-  const [step, setStep] = useState<"mode" | "timer" | "run">("mode");
+  const [step, setStep] = useState<"mode" | "run">("mode");
   const [mode, setMode] = useState<"practice" | "test">("practice");
-  const [timerOn, setTimerOn] = useState(true);
   const [i, setI] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   // One-step undo ("change your last response, but no further"): tracks the
@@ -50,17 +48,8 @@ export default function QuizRunner({
   const q = quiz.questions[i];
   const a = answers[String(q?.id)];
 
-  // Personality sections are UNTIMED. A timer only exists if the quiz explicitly
-  // defines one (e.g. a numerical set); otherwise Test Mode is just forward-only.
-  const hasQuizTimer = (quiz.testMode ?? 0) > 0;
-  const testDuration = hasQuizTimer ? (quiz.testMode as number) : 0;
-  const timerSeconds = !started
-    ? 0
-    : testMode
-      ? timerOn
-        ? testDuration
-        : 0
-      : quiz.practiceMode ?? 0;
+  // Personality sections are UNTIMED — there is no timer anywhere. Test Mode is
+  // simply forward-only; Practice Mode lets you go back.
   const allAnswered = useMemo(
     () => quiz.questions.every((qq) => isAnswered(qq, answers[String(qq.id)])),
     [quiz.questions, answers]
@@ -97,9 +86,11 @@ export default function QuizRunner({
     setAnswers(next);
     setLastPick({ qi: i, id: String(id) }); // this pick is now the only undoable one
     if (order.length === statementCount - 1) {
-      // block complete → advance after a brief beat so the choice registers
-      if (i < total - 1) setTimeout(() => setI((x) => x + 1), 220);
-      else setTimeout(() => finish(next), 220);
+      // Block complete (only the implicit "least" statement is left) → advance
+      // immediately, like the real OPQ32r. Batched with setAnswers above so the
+      // next block renders directly with no intermediate "summary" flash.
+      if (i < total - 1) setI((x) => x + 1);
+      else finish(next);
     }
   }
 
@@ -159,10 +150,6 @@ export default function QuizRunner({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started, q, i, total, answers, allAnswered, lastPick]);
 
-  function fmt(s: number) {
-    return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-  }
-
   // ---- Select Mode screen ----
   if (step === "mode") {
     return (
@@ -192,7 +179,7 @@ export default function QuizRunner({
             <button
               onClick={() => {
                 setMode("test");
-                setStep(hasQuizTimer ? "timer" : "run"); // personality is untimed → skip timer config
+                setStep("run"); // personality is untimed → straight into the assessment
               }}
               className="flex w-full items-center gap-4 rounded-2xl border border-neutral-200 p-5 text-left transition hover:border-brand hover:shadow-sm"
             >
@@ -200,7 +187,7 @@ export default function QuizRunner({
               <span>
                 <span className="block text-lg font-semibold">Test Mode</span>
                 <span className="block text-sm text-neutral-500">
-                  {hasQuizTimer ? "Simulate exam conditions." : "Exam conditions — forward-only, untimed."}
+                  Exam conditions — forward-only, untimed.
                 </span>
               </span>
             </button>
@@ -214,86 +201,31 @@ export default function QuizRunner({
     );
   }
 
-  // ---- Timer Config screen (test mode) ----
-  if (step === "timer") {
-    return (
-      <div className="max-w-md mx-auto px-5 py-14">
-        <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
-          <div className="flex items-center gap-4">
-            <span className="grid h-12 w-12 place-items-center rounded-xl bg-brand/10 text-brand text-xl">◷</span>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">Timer Config</h1>
-              <div className="text-xs font-bold uppercase tracking-widest text-brand">Test environment</div>
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-2xl bg-neutral-50 border border-neutral-200 p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-semibold">Enable question timer</div>
-                <div className="text-sm text-neutral-500">Simulates time pressure.</div>
-              </div>
-              <button
-                role="switch"
-                aria-checked={timerOn}
-                onClick={() => setTimerOn((v) => !v)}
-                className={`relative h-7 w-12 rounded-full transition ${timerOn ? "bg-brand" : "bg-neutral-300"}`}
-              >
-                <span
-                  className={`absolute top-0.5 h-6 w-6 rounded-full bg-white transition ${
-                    timerOn ? "left-[22px]" : "left-0.5"
-                  }`}
-                />
-              </button>
-            </div>
-            <div className="mt-4 border-t border-neutral-200 pt-4 flex items-center justify-between">
-              <span className="text-neutral-600">Duration</span>
-              <span className="rounded-lg bg-white border border-neutral-200 px-4 py-1.5 font-bold tabular-nums">
-                {timerOn ? fmt(testDuration) : "Untimed"}
-              </span>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setStep("run")}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3.5 font-semibold text-white hover:brightness-110"
-          >
-            ▶ Begin Assessment
-          </button>
-          <button
-            onClick={() => setStep("mode")}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-100 py-3 font-semibold text-neutral-600 hover:bg-neutral-200"
-          >
-            ← Back
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // ---- Question screen ----
   return (
-    <div className="max-w-2xl mx-auto px-5 py-10">
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-semibold text-brand uppercase tracking-wide">
-          {quiz.section || quiz.title}
+    <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="flex items-center justify-between">
+        <span className="text-lg font-bold uppercase tracking-wide text-brand">
+          Question {i + 1} <span className="text-neutral-400">of</span> {total}
         </span>
-        <span className="flex items-center gap-4 text-neutral-500">
-          {timerSeconds > 0 && <Timer seconds={timerSeconds} onExpire={finish} />}
-          <span>
-            {i + 1} / {total}
-          </span>
+        <span className="text-sm text-neutral-500 hidden sm:inline">
+          {quiz.section || quiz.title}
         </span>
       </div>
       <div className="mt-3 h-1.5 rounded-full bg-neutral-200 overflow-hidden">
         <div className="h-full bg-brand transition-all" style={{ width: `${((i + 1) / total) * 100}%` }} />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+      <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-6 md:p-8 shadow-sm">
         {q.type === "forced-choice" ? (
-          <h2 className="text-center text-xl text-neutral-700">
-            Which statement describes you <strong className="font-bold text-neutral-900">best</strong>?
-          </h2>
+          <div className="text-center">
+            <h2 className="text-xl text-neutral-700">
+              Which statement describes you <strong className="font-bold text-neutral-900">best</strong>?
+            </h2>
+            <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-neutral-400">
+              Pick {(isFCAnswer(a) ? a.order.length : 0) + 1} of {q.statements.length - 1}
+            </div>
+          </div>
         ) : (
           <Html html={q.text} />
         )}
@@ -368,27 +300,6 @@ export default function QuizRunner({
         {q.type === "forced-choice" &&
           (() => {
             const order = isFCAnswer(a) ? a.order : [];
-            const complete = order.length >= q.statements.length - 1;
-            if (complete) {
-              // Shown only briefly as the block auto-advances — the chosen ranking.
-              const ranked = [...order];
-              for (let k = 0; k < q.statements.length; k++) if (!ranked.includes(k)) ranked.push(k);
-              return (
-                <div className="mt-5 space-y-2">
-                  {ranked.map((si, pos) => (
-                    <div
-                      key={si}
-                      className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3"
-                    >
-                      <span className="grid h-6 w-6 place-items-center rounded-full bg-brand text-xs font-bold text-white">
-                        {pos + 1}
-                      </span>
-                      <span className="flex-1 text-neutral-600">{q.statements[si].text}</span>
-                    </div>
-                  ))}
-                </div>
-              );
-            }
             return (
               <div className="mt-5 space-y-3">
                 {q.statements.map((s, idx) =>
@@ -397,16 +308,11 @@ export default function QuizRunner({
                       key={idx}
                       type="button"
                       onClick={() => pickFC(q.id, idx, q.statements.length)}
-                      className="block w-full rounded-xl bg-[#eef3fb] px-5 py-4 text-center text-neutral-700 transition hover:bg-[#e0e9f7] hover:shadow-sm"
+                      className="block w-full rounded-xl border border-neutral-200 bg-neutral-50 px-5 py-4 text-center text-neutral-700 transition hover:border-brand hover:bg-brand/5 hover:shadow-sm"
                     >
                       {s.text}
                     </button>
                   )
-                )}
-                {order.length > 0 && (
-                  <p className="text-center text-xs text-neutral-400">
-                    Now pick the best of the remaining — the last one is taken as least like you.
-                  </p>
                 )}
               </div>
             );
@@ -419,10 +325,10 @@ export default function QuizRunner({
                 key={idx}
                 type="button"
                 onClick={() => pickRating(q.id, idx)}
-                className={`block w-full rounded-xl px-5 py-4 text-center transition hover:shadow-sm ${
+                className={`block w-full rounded-xl border px-5 py-4 text-center transition hover:shadow-sm ${
                   a === idx
-                    ? "bg-brand text-white"
-                    : "bg-[#eef3fb] text-neutral-700 hover:bg-[#e0e9f7]"
+                    ? "border-brand bg-brand text-white"
+                    : "border-neutral-200 bg-neutral-50 text-neutral-700 hover:border-brand hover:bg-brand/5"
                 }`}
               >
                 {label}

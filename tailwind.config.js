@@ -4,13 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Forest-green palette matching casebasix (its documented chart colours).
+        // Emerald palette sampled from casebasix's UI (header timer pill,
+        // section labels, accent bar).
         brand: {
-          DEFAULT: "#1f7a4d",
-          dark: "#12401c",
-          mid: "#267a56",
-          light: "#35c261",
-          pale: "#acf1b8",
+          DEFAULT: "#1f8f57",
+          dark: "#0f5132",
+          mid: "#27a06a",
+          light: "#41c97e",
+          pale: "#bdeccd",
         },
       },
       fontFamily: {
