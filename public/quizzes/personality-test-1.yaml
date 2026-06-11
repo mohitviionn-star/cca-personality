@@ -1,0 +1,184 @@
+title: Consulting Personality Practice
+subtitle: Personality Test 1
+section: Self-perception
+quizNumber: 1
+test: 1
+scoring: trait          # ipsative trait scoring (forced-choice)
+format: forced-choice   # SHL OPQ32r-style: rank a triplet by progressive selection
+practiceMode: 0         # untimed
+testMode: 0
+
+# Official-style forced-choice (OPQ32r): 24 blocks of 3 statements (72 total),
+# each block drawing on three different traits. The candidate clicks the
+# statement most like them, it locks, then picks the most of the remaining two;
+# the leftover is taken as least. Valid traits: leadership, communication,
+# adaptability, empathy, teamwork, time_management, cognitive.
+
+questions:
+  - id: 1
+    type: forced-choice
+    statements:
+      - { text: "I step up to lead when a group has no clear direction.", trait: leadership }
+      - { text: "I explain complex ideas so anyone in the room follows.", trait: communication }
+      - { text: "I stay effective when priorities change suddenly.", trait: adaptability }
+
+  - id: 2
+    type: forced-choice
+    statements:
+      - { text: "I notice when a teammate is struggling before they say so.", trait: empathy }
+      - { text: "I put the team's result ahead of personal credit.", trait: teamwork }
+      - { text: "I plan my week so deadlines never surprise me.", trait: time_management }
+
+  - id: 3
+    type: forced-choice
+    statements:
+      - { text: "I structure a messy problem before diving in.", trait: cognitive }
+      - { text: "I'm comfortable making the final call when others hesitate.", trait: leadership }
+      - { text: "I adjust how I present depending on the audience.", trait: communication }
+
+  - id: 4
+    type: forced-choice
+    statements:
+      - { text: "I'm energised by ambiguous problems.", trait: adaptability }
+      - { text: "I read a client's mood and respond to it.", trait: empathy }
+      - { text: "I take on the unglamorous part of a shared task.", trait: teamwork }
+
+  - id: 5
+    type: forced-choice
+    statements:
+      - { text: "I prioritise the few things that matter most.", trait: time_management }
+      - { text: "I'm comfortable reasoning from data.", trait: cognitive }
+      - { text: "I take ownership of outcomes beyond my formal role.", trait: leadership }
+
+  - id: 6
+    type: forced-choice
+    statements:
+      - { text: "I make sure my point lands before moving on.", trait: communication }
+      - { text: "I drop my plan when the situation calls for it.", trait: adaptability }
+      - { text: "I consider how a decision lands for those affected.", trait: empathy }
+
+  - id: 7
+    type: forced-choice
+    statements:
+      - { text: "I share credit and call out others' work.", trait: teamwork }
+      - { text: "I protect quality even under time pressure.", trait: time_management }
+      - { text: "I break complex questions into clear parts.", trait: cognitive }
+
+  - id: 8
+    type: forced-choice
+    statements:
+      - { text: "I push a team to raise its ambition rather than play safe.", trait: leadership }
+      - { text: "I'm comfortable presenting to senior people.", trait: communication }
+      - { text: "I pick up unfamiliar tools quickly.", trait: adaptability }
+
+  - id: 9
+    type: forced-choice
+    statements:
+      - { text: "I build trust quickly with new people.", trait: empathy }
+      - { text: "I'd rather solve a problem with the group than alone.", trait: teamwork }
+      - { text: "I break big tasks into a schedule I keep to.", trait: time_management }
+
+  - id: 10
+    type: forced-choice
+    statements:
+      - { text: "I look for the root cause, not the symptom.", trait: cognitive }
+      - { text: "People look to me to break a deadlock.", trait: leadership }
+      - { text: "I write concise updates people actually read.", trait: communication }
+
+  - id: 11
+    type: forced-choice
+    statements:
+      - { text: "I keep composure when a project changes shape.", trait: adaptability }
+      - { text: "I make space for quieter voices.", trait: empathy }
+      - { text: "I adapt to how the team works best.", trait: teamwork }
+
+  - id: 12
+    type: forced-choice
+    statements:
+      - { text: "I rarely scramble at the last minute.", trait: time_management }
+      - { text: "I test my assumptions before committing.", trait: cognitive }
+      - { text: "I set a clear direction others can rally behind.", trait: leadership }
+
+  - id: 13
+    type: forced-choice
+    statements:
+      - { text: "I summarise a long discussion into a clear takeaway.", trait: communication }
+      - { text: "I treat setbacks as information, not failure.", trait: adaptability }
+      - { text: "I want to understand the other side of a disagreement.", trait: empathy }
+
+  - id: 14
+    type: forced-choice
+    statements:
+      - { text: "I help a colleague even when I'm busy.", trait: teamwork }
+      - { text: "I say no to low-value work to protect priorities.", trait: time_management }
+      - { text: "I enjoy finding the logic under complexity.", trait: cognitive }
+
+  - id: 15
+    type: forced-choice
+    statements:
+      - { text: "I volunteer for the hardest part of a project.", trait: leadership }
+      - { text: "I get to the point quickly in meetings.", trait: communication }
+      - { text: "I adjust fast when feedback changes my approach.", trait: adaptability }
+
+  - id: 16
+    type: forced-choice
+    statements:
+      - { text: "I adapt my style to what a teammate needs.", trait: empathy }
+      - { text: "I make sure everyone's contribution is heard.", trait: teamwork }
+      - { text: "I finish before the deadline, not at it.", trait: time_management }
+
+  - id: 17
+    type: forced-choice
+    statements:
+      - { text: "I map a problem before proposing solutions.", trait: cognitive }
+      - { text: "I hold the team to a high standard, starting with myself.", trait: leadership }
+      - { text: "I can disagree without it becoming personal.", trait: communication }
+
+  - id: 18
+    type: forced-choice
+    statements:
+      - { text: "I find a way forward when the plan falls through.", trait: adaptability }
+      - { text: "I pick up on unspoken tension in a room.", trait: empathy }
+      - { text: "I'd rather the team win than be proven right.", trait: teamwork }
+
+  - id: 19
+    type: forced-choice
+    statements:
+      - { text: "I keep a clear view of urgent vs important.", trait: time_management }
+      - { text: "I question data that looks too convenient.", trait: cognitive }
+      - { text: "I'm willing to decide with incomplete information.", trait: leadership }
+
+  - id: 20
+    type: forced-choice
+    statements:
+      - { text: "I listen carefully before responding.", trait: communication }
+      - { text: "I'm comfortable working outside my expertise.", trait: adaptability }
+      - { text: "I'm the person others come to when stuck.", trait: empathy }
+
+  - id: 21
+    type: forced-choice
+    statements:
+      - { text: "I cover for a teammate without being asked.", trait: teamwork }
+      - { text: "I protect focused time for important work.", trait: time_management }
+      - { text: "I spot patterns others miss.", trait: cognitive }
+
+  - id: 22
+    type: forced-choice
+    statements:
+      - { text: "I step in to resolve conflict rather than wait it out.", trait: leadership }
+      - { text: "I tailor the level of detail to who's listening.", trait: communication }
+      - { text: "I see change as opportunity more than threat.", trait: adaptability }
+
+  - id: 23
+    type: forced-choice
+    statements:
+      - { text: "I weigh how my words will affect someone.", trait: empathy }
+      - { text: "I build on others' ideas rather than compete.", trait: teamwork }
+      - { text: "I re-plan quickly when priorities shift.", trait: time_management }
+
+  - id: 24
+    type: forced-choice
+    statements:
+      - { text: "I reason from evidence to conclusion.", trait: cognitive }
+      - { text: "I take responsibility when something goes wrong on my watch.", trait: leadership }
+      - { text: "I keep several workstreams on track at once.", trait: time_management }

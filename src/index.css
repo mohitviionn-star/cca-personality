@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-neutral-50 text-neutral-900 antialiased;
+}
+
+/* Raw HTML coming from YAML `text`/`explanation` fields uses Tailwind-ish
+   prose. Provide sensible defaults so authored content reads well. */
+.qhtml p {
+  @apply mb-3 leading-relaxed;
+}
+.qhtml ul {
+  @apply mb-3 list-disc pl-6 space-y-1;
+}
+.qhtml h2 {
+  @apply text-lg font-semibold mb-2;
+}
+.qhtml strong {
+  @apply font-semibold text-brand-dark;
+}

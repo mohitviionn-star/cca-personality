@@ -1,0 +1,36 @@
+title: Consulting Personality Practice
+subtitle: Personality Test 2
+section: How others see you
+quizNumber: 2
+test: 2
+scoring: trait
+scale: likert5
+practiceMode: 0
+testMode: 0
+
+# Test 2 is framed as how a colleague, client, or professor who worked with you
+# would describe you. Same seven traits as Test 1; the platform compares the two
+# profiles for consistency. This is the real Test 2 length (15 items).
+
+questions:
+  - { id: 1,  type: likert, trait: leadership,      text: "<p>A colleague would say I took charge when our project lost direction.</p>" }
+  - { id: 2,  type: likert, trait: leadership,      text: "<p>A client would say they trusted me to drive the engagement forward.</p>" }
+  - { id: 3,  type: likert, trait: leadership,      text: "<p>A professor would say I led the group rather than waiting to be told what to do.</p>" }
+
+  - { id: 4,  type: likert, trait: communication,   text: "<p>A client would say I explained complex recommendations clearly.</p>" }
+  - { id: 5,  type: likert, trait: communication,   text: "<p>A colleague would say I kept everyone informed with concise updates.</p>" }
+
+  - { id: 6,  type: likert, trait: adaptability,    text: "<p>A colleague would say I adjusted smoothly when the plan changed last minute.</p>" }
+  - { id: 7,  type: likert, trait: adaptability,    text: "<p>A professor would say I handled ambiguous, open-ended problems comfortably.</p>" }
+
+  - { id: 8,  type: likert, trait: empathy,         text: "<p>A client would say I genuinely understood their concerns.</p>" }
+  - { id: 9,  type: likert, trait: empathy,         text: "<p>A colleague would say I noticed when teammates were under pressure.</p>" }
+
+  - { id: 10, type: likert, trait: teamwork,        text: "<p>A colleague would say I put the team's success ahead of my own credit.</p>" }
+  - { id: 11, type: likert, trait: teamwork,        text: "<p>A professor would say I was the person every group wanted on their team.</p>" }
+
+  - { id: 12, type: likert, trait: time_management, text: "<p>A client would say I consistently delivered what I promised, on time.</p>" }
+  - { id: 13, type: likert, trait: time_management, text: "<p>A colleague would say I managed competing deadlines without dropping quality.</p>" }
+
+  - { id: 14, type: likert, trait: cognitive,       text: "<p>A professor would say I brought real analytical rigour to messy problems.</p>" }
+  - { id: 15, type: likert, trait: cognitive,       text: "<p>A client would say I structured our problem clearly before jumping to solutions.</p>" }

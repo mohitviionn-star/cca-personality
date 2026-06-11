@@ -1,0 +1,478 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+  @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1a2421; font-size: 10.5pt; line-height: 1.5; margin: 0;
+  }
+  .cover {
+    height: 247mm; display: flex; flex-direction: column; justify-content: center;
+    page-break-after: always;
+  }
+  .cover .eyebrow { text-transform: uppercase; letter-spacing: .18em; font-size: 10pt;
+    color: #1ea672; font-weight: 700; }
+  .cover h1 { font-size: 30pt; margin: 8px 0 4px; letter-spacing: -0.02em; }
+  .cover .sub { font-size: 13pt; color: #5b6b66; }
+  .cover .meta { margin-top: 28px; font-size: 10pt; color: #5b6b66; }
+  .cover .rule { height: 4px; width: 64px; background: #1ea672; margin: 18px 0; border-radius: 2px; }
+  .page-break { page-break-before: always; }
+  h1 { font-size: 19pt; letter-spacing: -0.01em; border-bottom: 2px solid #1ea672;
+    padding-bottom: 5px; margin: 0 0 12px; }
+  h2 { font-size: 14pt; margin: 20px 0 8px; color: #0f3d2e; }
+  h3 { font-size: 11.5pt; margin: 14px 0 5px; }
+  h2, h3 { page-break-after: avoid; }
+  p, li { orphans: 3; widows: 3; }
+  a { color: #138a5e; text-decoration: none; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 9.5pt;
+    page-break-inside: avoid; }
+  th, td { border: 1px solid #cdd8d4; padding: 6px 9px; text-align: left; vertical-align: top; }
+  th { background: #eef5f2; font-weight: 700; }
+  code { background: #eef2f1; padding: 1px 5px; border-radius: 4px; font-size: 9pt;
+    font-family: "SF Mono", "Menlo", monospace; }
+  pre { background: #0e1413; color: #e7efec; padding: 12px 14px; border-radius: 8px;
+    overflow-x: auto; font-size: 8.6pt; line-height: 1.45; page-break-inside: avoid; }
+  pre code { background: none; color: inherit; padding: 0; }
+  blockquote { border-left: 3px solid #1ea672; margin: 10px 0; padding: 2px 14px; color: #4a5a55; }
+  hr { border: none; border-top: 1px solid #dce5e2; margin: 18px 0; }
+  strong { color: #0f3d2e; }
+  .doc { page-break-before: always; }
+  .doc:first-of-type { page-break-before: avoid; }
+</style></head>
+<body>
+  <div class="cover">
+    <div class="eyebrow">Consulting Personality Practice</div>
+    <h1>Personality Test 1 &amp; 2</h1>
+    <div class="sub">Requirements Specification &amp; High-Level Design</div>
+    <div class="rule"></div>
+    <div class="meta">
+      Version 2.1 &nbsp;·&nbsp; 11 June 2026<br/>
+      Standalone React + Vite, YAML-driven (Test 1 &amp; Test 2).<br/>
+      Covers: requirements, architecture, schema, and scoring algorithms
+      (forced-choice + Likert + multi-select, sten report, self-vs-others consistency).
+    </div>
+  </div>
+  <section class="doc"><h1>CCA Personality Prep — Requirements Specification</h1>
+<p><strong>Version:</strong> 2.1 · <strong>Date:</strong> 2026-06-11 · <strong>Status:</strong> implemented (standalone React/Vite app)</p>
+<blockquote>
+<p>v2 supersedes v1. The product was rebuilt as a standalone <strong>React + Vite +
+Tailwind</strong> single-page app that is <strong>YAML-driven</strong> (mirroring the existing
+<code>cca-numerical</code> quiz platform), replacing the earlier Next.js prototype.
+v2.1 adds the SHL-style <strong>forced-choice</strong> format and a <strong>sten-based report</strong>,
+and neutralises product branding.</p>
+</blockquote>
+<hr>
+<h2>1. Purpose &amp; Scope</h2>
+<p>A web app for practising the two <strong>personality sections</strong> of an SHL-style
+consulting career assessment. Quizzes are authored as YAML files; the app
+renders them, scores answers into a <strong>7-trait profile</strong>, presents an SHL-style
+<strong>sten report</strong>, and analyses the <strong>consistency between Test 1 (self-perception)
+and Test 2 (how others see you)</strong> — the behaviour the assessment screens on.</p>
+<p><strong>In scope (v2.1):</strong></p>
+<ul>
+<li>YAML-driven quizzes loaded via <code>?quiz-id=&lt;file&gt;.yaml</code> from <code>public/quizzes/</code>.</li>
+<li>Question types: <code>forced-choice</code> (SHL OPQ-style most/least), <code>likert</code> (1–5 agreement),
+<code>multi-select</code> (choose up to N), <code>single-select</code>. Types may be mixed in one quiz.</li>
+<li>In-app <strong>trait scoring</strong> (ipsative forced-choice; Likert with reverse-scoring; per-option weights).</li>
+<li><strong>SHL-style report:</strong> sten scores (1–10) on a profile chart with the population-average band,
+percentile equivalents, and original per-trait narrative interpretation.</li>
+<li>Per-test profile <strong>and</strong> Test 1 ↔ Test 2 consistency analysis (sten gaps + extreme-answer flags).</li>
+<li>Local persistence (<code>localStorage</code>) so the cross-test comparison works without a backend.</li>
+<li>Optional timer (practice/test mode) when a quiz defines one; personality sections are untimed.</li>
+</ul>
+<p><strong>Out of scope (v2.1):</strong> user accounts / server database; the numerical question
+types (<code>fill-box</code>, <code>chart-adjust</code>, etc.) and correctness scoring used by the
+<code>cca-numerical</code> sets; payment; SHL&#39;s proprietary norm group (the sten norming is
+illustrative, not an official SHL norm comparison).</p>
+<p><strong>Branding &amp; disclaimer:</strong> the product is named neutrally (&quot;Consulting
+Personality Practice&quot;); BCG/SHL/OPQ/CCA appear only descriptively. A prominent
+disclaimer states it is <strong>not affiliated with or endorsed by BCG or SHL</strong>, that
+those names are trademarks of their owners, and that all items/interpretations
+are original practice material.</p>
+<hr>
+<h2>2. Actors</h2>
+<table>
+<thead>
+<tr>
+<th>Actor</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Candidate</strong></td>
+<td>Takes a quiz, sees their trait profile + consistency analysis.</td>
+</tr>
+<tr>
+<td><strong>Content author (Eric)</strong></td>
+<td>Drops a YAML file into <code>public/quizzes/</code> and redeploys; owns all question content.</td>
+</tr>
+<tr>
+<td><strong>Operator</strong></td>
+<td>Builds and hosts the static site (e.g. Vercel).</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. Domain Glossary</h2>
+<ul>
+<li><strong>Trait</strong> — one of 7 measured dimensions: <code>leadership</code>, <code>communication</code>,
+<code>adaptability</code>, <code>empathy</code>, <code>teamwork</code>, <code>time_management</code>, <code>cognitive</code>.</li>
+<li><strong>Quiz</strong> — a YAML file describing one test (metadata + questions).</li>
+<li><strong>Question</strong> — <code>likert</code>, <code>multi-select</code>, or <code>single-select</code>; each carries trait tag(s).</li>
+<li><strong>Trait Profile</strong> — a vector of 7 scores in <code>[0,100]</code>.</li>
+<li><strong>Consistency Score</strong> — <code>[0,100]</code> alignment between a Test 1 and Test 2 profile.</li>
+</ul>
+<hr>
+<h2>4. Functional Requirements</h2>
+<h3>4.1 Quiz loading</h3>
+<ul>
+<li><strong>FR-L1</strong> The app reads <code>quiz-id</code> from the URL query and fetches <code>/quizzes/&lt;quiz-id&gt;</code>; default <code>personality-test-1.yaml</code>.</li>
+<li><strong>FR-L2</strong> The YAML is parsed and <strong>validated</strong>; invalid files show a clear, specific error (which question, what&#39;s wrong) rather than failing silently.</li>
+<li><strong>FR-L3</strong> Question content is authored as raw HTML in the <code>text</code> field and rendered as such (author-controlled, not user input).</li>
+</ul>
+<h3>4.2 Question types</h3>
+<ul>
+<li><strong>FR-Q0 <code>forced-choice</code></strong> — a block of ≥3 statements, each a <em>different</em> trait; the candidate marks the one <strong>most</strong> and the one <strong>least</strong> like them (a statement cannot be both). The SHL OPQ-style ipsative format.</li>
+<li><strong>FR-Q1 <code>likert</code></strong> — one statement, answered on a 1–5 agreement scale (single-select); maps to one <code>trait</code>, optional <code>reverse</code>.</li>
+<li><strong>FR-Q2 <code>multi-select</code></strong> — a prompt with options; the candidate selects up to <code>maxSelections</code>; each option maps to a <code>trait</code> (+ optional <code>weight</code>).</li>
+<li><strong>FR-Q3 <code>single-select</code></strong> — a prompt with options; exactly one chosen; each option maps to a <code>trait</code>.</li>
+</ul>
+<h3>4.3 Taking a quiz</h3>
+<ul>
+<li><strong>FR-T1</strong> Questions are presented one per screen with a progress bar and position indicator.</li>
+<li><strong>FR-T2</strong> Navigation: Back/Next; Next is disabled until the current question is answered; the last screen offers Finish, enabled only when all questions are answered.</li>
+<li><strong>FR-T3</strong> Multi-select enforces <code>maxSelections</code>/<code>minSelections</code>; forced-choice requires both a <em>most</em> and a <em>least</em> (and they must differ).</li>
+<li><strong>FR-T4</strong> A start screen shows title/section, a prominent disclaimer, and (if timers are defined) a Practice vs. Test choice; personality quizzes (timer 0) start untimed.</li>
+<li><strong>FR-T5</strong> If a non-zero timer is active and expires, the quiz auto-submits.</li>
+<li><strong>FR-T6</strong> Keyboard support: Likert items accept keys 1–5; Enter/→ advances, ← goes back.</li>
+</ul>
+<h3>4.4 Scoring &amp; results</h3>
+<ul>
+<li><strong>FR-S1</strong> On finish, the app computes the trait profile in-app (algorithm fixed; see DESIGN §4).</li>
+<li><strong>FR-S2</strong> Results present an <strong>SHL-style report</strong>: each trait as a <strong>sten score (1–10)</strong> on a profile chart with the population-average band shaded, plus percentile and band, and an original narrative interpretation per trait.</li>
+<li><strong>FR-S3</strong> If a profile for the <em>other</em> test exists (this session or a prior one), results show the <strong>consistency analysis</strong>: overall score, trait-by-trait sten-gap table, and extreme-answer flags, with a plain-language summary.</li>
+<li><strong>FR-S4</strong> With only one test taken, results prompt the user to take the other to unlock the comparison, linking to it.</li>
+<li><strong>FR-S5</strong> Each test&#39;s latest profile persists in <code>localStorage</code>, keyed by test number.</li>
+<li><strong>FR-S6</strong> The report states that sten norming is illustrative, not SHL&#39;s proprietary norm group.</li>
+</ul>
+<h3>4.5 Content authoring</h3>
+<ul>
+<li><strong>FR-C1</strong> Adding/editing a quiz requires only a YAML file in <code>public/quizzes/</code>; no code changes.</li>
+<li><strong>FR-C2</strong> The schema is backward-compatible with the <code>cca-numerical</code> metadata keys (<code>title</code>, <code>subtitle</code>, <code>section</code>, <code>quizNumber</code>, <code>practiceMode</code>, <code>testMode</code>).</li>
+</ul>
+<hr>
+<h2>5. Non-Functional Requirements</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>NFR-1 (No backend)</strong></td>
+<td>Pure static SPA; runs from any static host. State lives in the browser.</td>
+</tr>
+<tr>
+<td><strong>NFR-2 (Determinism)</strong></td>
+<td>Scoring is a pure function of answers + quiz; identical inputs → identical profile.</td>
+</tr>
+<tr>
+<td><strong>NFR-3 (Validation)</strong></td>
+<td>Malformed YAML never crashes silently; the user sees what to fix.</td>
+</tr>
+<tr>
+<td><strong>NFR-4 (Performance)</strong></td>
+<td>Single small bundle (~65 kB gzipped); instant scoring (O(#answers)).</td>
+</tr>
+<tr>
+<td><strong>NFR-5 (Responsive)</strong></td>
+<td>Usable on mobile and desktop widths.</td>
+</tr>
+<tr>
+<td><strong>NFR-6 (Maintainability)</strong></td>
+<td>Scoring isolated in <code>src/lib/scoring.ts</code>, framework-free and unit-testable.</td>
+</tr>
+<tr>
+<td><strong>NFR-7 (Authoring fidelity)</strong></td>
+<td>Same YAML conventions as <code>cca-numerical</code> so content tooling/workflow is shared.</td>
+</tr>
+<tr>
+<td><strong>NFR-8 (Privacy)</strong></td>
+<td>No accounts, no server, no third-party analytics; only local trait scores stored.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. Constraints &amp; Assumptions</h2>
+<ul>
+<li>Real CCA item content is proprietary; the app models the <strong>format</strong>, not the items.</li>
+<li>Cross-test consistency relies on <code>localStorage</code>, so it is per-browser (clearing storage resets it). Acceptable given the no-backend constraint.</li>
+<li>Node 18+ / modern evergreen browsers.</li>
+</ul>
+<hr>
+<h2>7. Acceptance Criteria (v2) — passing</h2>
+<ul>
+<li>Loads &amp; validates <code>personality-test-1.yaml</code> / <code>-2.yaml</code>; bad YAML shows a specific error. ✅</li>
+<li><code>likert</code> (with reverse) and <code>multi-select</code> (with <code>maxSelections</code>) render and are answerable. ✅</li>
+<li>Finishing produces a 7-trait profile (all values 0–100); reverse + multi-select scoring verified numerically. ✅</li>
+<li>Taking both tests shows the consistency score, gap table, and extreme flags. ✅</li>
+<li>Production build compiles and type-checks clean. ✅</li>
+</ul>
+<hr>
+<h2>8. Roadmap (not in v2)</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Full content</td>
+<td>Expand to the real ~76 (Test 1) + ~15 (Test 2) items (author-supplied).</td>
+</tr>
+<tr>
+<td>Pre-test coaching</td>
+<td>Briefing + per-trait &quot;what good looks like&quot; guidance.</td>
+</tr>
+<tr>
+<td>Progress trend</td>
+<td>Track consistency across attempts over time.</td>
+</tr>
+<tr>
+<td>Answer review</td>
+<td>Let candidates revisit/change answers before submitting.</td>
+</tr>
+</tbody></table>
+</section><div class="page-break"></div><section class="doc"><h1>CCA Personality Prep — High-Level Design</h1>
+<p><strong>Version:</strong> 2.1 · <strong>Date:</strong> 2026-06-11 · Companion to <a href="./REQUIREMENTS.md">REQUIREMENTS.md</a></p>
+<blockquote>
+<p>v2 = standalone React + Vite + Tailwind SPA, YAML-driven, no backend.
+v2.1 adds the forced-choice algorithm and the SHL-style sten report.</p>
+</blockquote>
+<hr>
+<h2>1. Architecture Overview</h2>
+<p>A static single-page app. There is no server: the browser fetches a YAML quiz,
+renders it, scores answers locally, and persists results in <code>localStorage</code>.</p>
+<pre><code>                          Browser (SPA)
+   ┌──────────────────────────────────────────────────────────┐
+   │  App.tsx  (phase machine: loading→running→results)         │
+   │     │                                                      │
+   │     ├── lib/loadQuiz.ts ──fetch──▶ /quizzes/&lt;id&gt;.yaml      │
+   │     │      (js-yaml parse + validate)                      │
+   │     │                                                      │
+   │     ├── components/Quiz.tsx                                │
+   │     │      Likert / MultiSelect / SingleSelect inputs      │
+   │     │      Timer (only if quiz defines one)                │
+   │     │                                                      │
+   │     ├── lib/scoring.ts  (pure: scoreQuiz, buildFeedback)   │
+   │     │                                                      │
+   │     ├── components/Results.tsx + TraitBar.tsx              │
+   │     └── lib/storage.ts ──▶ localStorage (per-test profile) │
+   └──────────────────────────────────────────────────────────┘
+                 served as static files (Vite build → dist/)
+</code></pre>
+<h3>1.1 Module responsibilities</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/App.tsx</code></td>
+<td>Top-level state machine: load → run → results; reads <code>quiz-id</code>.</td>
+</tr>
+<tr>
+<td><code>src/lib/loadQuiz.ts</code></td>
+<td>Fetch + <code>js-yaml</code> parse + schema validation with actionable errors.</td>
+</tr>
+<tr>
+<td><code>src/lib/traits.ts</code></td>
+<td>The 7 traits, lookup maps, <code>isTraitId</code> guard.</td>
+</tr>
+<tr>
+<td><code>src/types.ts</code></td>
+<td>Quiz / Question / Answer types mirroring the YAML schema.</td>
+</tr>
+<tr>
+<td><code>src/lib/scoring.ts</code></td>
+<td><strong>All algorithms</strong> — <code>scoreQuiz</code>, <code>buildFeedback</code>. Pure, deterministic.</td>
+</tr>
+<tr>
+<td><code>src/lib/storage.ts</code></td>
+<td>Persist/read the latest profile per test (<code>localStorage</code>).</td>
+</tr>
+<tr>
+<td><code>src/components/Quiz.tsx</code></td>
+<td>Start screen, per-question rendering, navigation, finish.</td>
+</tr>
+<tr>
+<td><code>src/components/Results.tsx</code></td>
+<td>Trait profile + consistency analysis + extreme flags.</td>
+</tr>
+<tr>
+<td><code>src/components/TraitBar.tsx</code></td>
+<td>Labelled bars per trait (self vs. others colouring).</td>
+</tr>
+<tr>
+<td><code>src/components/Timer.tsx</code></td>
+<td>Countdown, used only for timed quizzes.</td>
+</tr>
+<tr>
+<td><code>src/components/Html.tsx</code></td>
+<td>Renders author-controlled HTML from YAML <code>text</code>.</td>
+</tr>
+</tbody></table>
+<h3>1.2 Key design choices</h3>
+<ul>
+<li><strong>YAML-driven, content-out-of-code</strong> — authors add quizzes by dropping files in
+<code>public/quizzes/</code>, matching the <code>cca-numerical</code> workflow. The app ships the
+engine + UI only.</li>
+<li><strong>Algorithm in app, content in YAML</strong> — the YAML tags each item with its trait(s);
+the scoring math lives in <code>scoring.ts</code> (a single source of truth).</li>
+<li><strong>Pure scoring functions</strong> — no I/O, fully deterministic, unit-testable.</li>
+<li><strong>No backend</strong> — cross-test consistency uses <code>localStorage</code>; simplest thing that
+satisfies the requirement without servers or accounts.</li>
+</ul>
+<hr>
+<h2>2. Data / Schema Model</h2>
+<p>YAML quiz (personality), backward-compatible with the numerical sets&#39; metadata:</p>
+<pre><code class="language-yaml">title, subtitle, section, quizNumber     # display metadata (shared convention)
+test: 1 | 2                              # drives the consistency comparison
+scoring: trait                           # vs. &quot;correctness&quot; (numerical sets)
+scale: likert5                           # 1=Strongly disagree … 5=Strongly agree
+practiceMode, testMode                   # timer seconds; 0/absent = untimed
+format: forced-choice | likert | multi-select   # informational; types may be mixed
+questions:
+  - { id, type: forced-choice, text?, statements: [{text, trait}] }   # ≥3, distinct traits
+  - { id, type: likert, trait, reverse?, text }
+  - { id, type: multi-select, maxSelections?, minSelections?, text, options: [{text, trait, weight?}] }
+  - { id, type: single-select, text, options: [{text, trait, weight?}] }
+</code></pre>
+<p><strong>Persisted state</strong> (<code>localStorage</code>): <code>cca_profile_test1</code> / <code>cca_profile_test2</code>
+→ <code>{ profile: TraitProfile, at: epochMs }</code>. Only the computed profile is stored,
+so the comparison survives separate sittings.</p>
+<hr>
+<h2>3. Runtime Flow</h2>
+<ol>
+<li><code>App</code> reads <code>quiz-id</code>, calls <code>loadQuiz</code> → parse + validate.</li>
+<li><code>Quiz</code> renders the start screen, then one question per screen; answers held in component state.</li>
+<li>On finish → <code>scoreQuiz(quiz, answers)</code> → save to <code>localStorage</code> → show <code>Results</code>.</li>
+<li><code>Results</code> loads the other test&#39;s stored profile; if present → <code>buildFeedback</code> → consistency view.</li>
+</ol>
+<hr>
+<h2>4. Algorithms (<code>src/lib/scoring.ts</code>)</h2>
+<p>Notation: 7 traits indexed by <code>t</code>; profiles map <code>trait → score ∈ [0,100]</code>. All
+answer types are projected onto a common <strong>contribution scale <code>[0,1]</code></strong>, then a
+trait&#39;s score is the mean of its contributions × 100. This unifies Likert and
+select-style items so they can coexist in one quiz.</p>
+<h3>4.1 Per-type contributions</h3>
+<pre><code>forced-choice (block of statements; answer = {most, least}):   # ipsative
+    for each statement s at index i:
+        contribution = (i == most) ? 1 : (i == least) ? 0 : 0.5
+        → added to s.trait
+    # over many blocks: a trait often &quot;most&quot; trends high, often &quot;least&quot; low,
+    # unpicked ~0.5 — the SHL relative (ipsative) profile.
+
+likert (value v ∈ 1..5):
+    effective = reverse ? (6 - v) : v          # reverse-score negatively-worded items
+    contribution = clamp01( (effective - 1) / 4 )   # 1→0.0, 3→0.5, 5→1.0
+    → added to the item&#39;s single `trait`
+
+single-select (chosen option o):
+    contribution = clamp01( o.weight ?? 1 )    # → o.trait
+
+multi-select (each option o at index i):
+    contribution = selected(i) ? clamp01(o.weight ?? 1) : 0   # → o.trait
+    # every option is a binary item for its trait: chosen = endorse, unchosen = 0
+</code></pre>
+<h3>4.2 Aggregation</h3>
+<pre><code>for each trait t:
+    xs = all contributions routed to t
+    profile[t] = xs.length ? round( mean(xs) * 100 ) : 50   # 50 = neutral when unmeasured
+</code></pre>
+<ul>
+<li><strong>Complexity:</strong> O(#questions + #options).</li>
+<li><strong>Why mean (not sum):</strong> keeps every trait on a comparable 0–100 scale regardless
+of how many items measure it — authors don&#39;t have to balance item counts exactly.</li>
+<li><strong>Worked example.</strong> <code>time_management</code> measured by: a normal Likert at 4 (→0.75),
+a reverse Likert at 4 (effective 2 →0.25), and an unselected multi-select option
+(→0). Mean = (0.75+0.25+0)/3 = 0.33 → <strong>33</strong>. (Verified against the live engine.)</li>
+</ul>
+<h3>4.3 Consistency analysis (<code>buildFeedback(p1, p2)</code>)</h3>
+<pre><code>for each trait t: gap[t] = |p1[t] - p2[t]|
+gaps_sorted   = traits by gap, descending
+avgGap        = mean(gap)
+consistency   = max(0, round(100 - avgGap))     # 0..100, higher = more aligned
+inconsistencies = { t : gap[t] &gt; 25 }            # GAP_FLAG = 25
+extremes        = { (t,test) : score ≥ 88 (high) or ≤ 12 (low) }   # on BOTH profiles
+</code></pre>
+<p><strong>Summary</strong> is rule-based: ≥80 and no inconsistencies → &quot;strong, coherent&quot;; any
+inconsistencies → name the top 1–2 gap traits; else → &quot;tighten the largest gaps&quot;;
+append an &quot;avoid extremes&quot; note if any extremes exist.</p>
+<p><strong>Thresholds</strong> (centralised in <code>scoring.ts</code>): <code>100 - avgGap</code> is intuitive and
+bounded; <code>GAP_FLAG = 25</code> (~quarter scale) marks genuine self-vs-others
+disagreement; <code>HIGH/LOW = 88/12</code> flag the top/bottom ~12% spikes BCG penalises.
+<strong>Complexity:</strong> O(7).</p>
+<h3>4.4 SHL-style report — sten standardisation (<code>src/lib/sten.ts</code>)</h3>
+<p>The report converts each 0–100 trait score into a <strong>sten</strong> (Standard Ten: mean
+5.5, sd 2, range 1–10) — the SHL reporting metric — plus a percentile.</p>
+<pre><code>z          = (score - POP_MEAN) / POP_SD          # POP_MEAN = 50, POP_SD = 20 (illustrative)
+sten       = clamp(round(5.5 + 2·z), 1, 10)
+percentile = clamp(round(Φ(z) · 100), 1, 99)      # Φ = standard normal CDF (A&amp;S approx)
+band       = Low | Below average | Average | Above average | High   # by sten range
+</code></pre>
+<p>The profile chart shades stens <strong>4–7</strong> as the population-average band and marks
+each trait&#39;s sten. Per-trait narrative text (<code>src/lib/narratives.ts</code>) is selected
+by band (low ≤4 / avg / high ≥8) and is original wording.</p>
+<blockquote>
+<p><strong>Norming caveat:</strong> <code>POP_MEAN/POP_SD</code> define an <em>illustrative</em> population, not
+SHL&#39;s proprietary norm group (which is not public). The sten metric, chart,
+percentile, and banded interpretation mirror SHL&#39;s report <strong>format</strong>; the
+numbers indicate relative standing, not an official SHL norm comparison. This
+is stated in the UI.</p>
+</blockquote>
+<hr>
+<h2>5. Validation &amp; Error Handling</h2>
+<p><code>loadQuiz</code> rejects with a specific message when: the file is missing/empty, has no
+<code>questions</code>, a likert item lacks a valid <code>trait</code>, or a select item has &lt; 2 options
+or an option with an invalid <code>trait</code>. Errors render in a visible panel naming the
+offending question — authoring feedback, not a blank screen.</p>
+<hr>
+<h2>6. Build &amp; Deployment</h2>
+<ul>
+<li><strong>Dev:</strong> <code>npm run dev</code> → <code>http://localhost:5173/?quiz-id=personality-test-1.yaml</code>.</li>
+<li><strong>Build:</strong> <code>npm run build</code> (<code>tsc -b &amp;&amp; vite build</code>) → static <code>dist/</code>.</li>
+<li><strong>Host:</strong> any static host (e.g. Vercel), same as <code>cca-numerical</code>.</li>
+<li><strong>Add content:</strong> drop a YAML in <code>public/quizzes/</code>, redeploy.</li>
+</ul>
+<hr>
+<h2>7. Testing Strategy</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scoring</td>
+<td>Pure-function checks: known answers → expected profile; reverse + multi-select + empty-trait (→50) edge cases. (Verified on the real YAML.)</td>
+</tr>
+<tr>
+<td>Loader</td>
+<td>Valid file parses; malformed files produce the expected validation error.</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Manual: render likert/multi, enforce <code>maxSelections</code>, gating of Next/Finish, results + consistency render.</td>
+</tr>
+<tr>
+<td>E2E <em>(planned)</em></td>
+<td>Headless run: load both YAMLs, answer, assert consistency view.</td>
+</tr>
+</tbody></table>
+<pre><code>
+</code></pre>
+</section>
+</body></html>

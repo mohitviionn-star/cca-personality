@@ -1,0 +1,82 @@
+title: Consulting Personality Practice
+subtitle: Personality Test 1
+section: Self-perception
+quizNumber: 1
+test: 1
+scoring: trait          # personality scoring (vs. "correctness" for numerical sets)
+scale: likert5          # 1 = Strongly disagree … 5 = Strongly agree
+practiceMode: 0         # 0 = untimed (personality sections are untimed)
+testMode: 0
+
+# Sample/template set, balanced across the seven traits with several reverse-keyed
+# items and two multi-select (SJT-style) questions. The real Test 1 has ~76 items;
+# extend by adding more questions here. Valid traits: leadership, communication,
+# adaptability, empathy, teamwork, time_management, cognitive.
+
+questions:
+  # ---- Leadership ----
+  - { id: 1,  type: likert, trait: leadership,      text: "<p>I step up to lead when a group has no clear direction.</p>" }
+  - { id: 2,  type: likert, trait: leadership,      text: "<p>I'm comfortable making the final call when others hesitate.</p>" }
+  - { id: 3,  type: likert, trait: leadership,      text: "<p>I take ownership of outcomes, even when they aren't strictly my job.</p>" }
+  - { id: 4,  type: likert, trait: leadership, reverse: true, text: "<p>I'd rather let someone else take charge of a group.</p>" }
+
+  # ---- Communication ----
+  - { id: 5,  type: likert, trait: communication,   text: "<p>I can explain a complex idea so anyone in the room follows it.</p>" }
+  - { id: 6,  type: likert, trait: communication,   text: "<p>I adjust how I present depending on who I'm talking to.</p>" }
+  - { id: 7,  type: likert, trait: communication,   text: "<p>I get to the point quickly in meetings.</p>" }
+  - { id: 8,  type: likert, trait: communication, reverse: true, text: "<p>I often struggle to get my point across clearly.</p>" }
+
+  # ---- Adaptability ----
+  - { id: 9,  type: likert, trait: adaptability,    text: "<p>I stay effective when priorities change at short notice.</p>" }
+  - { id: 10, type: likert, trait: adaptability,    text: "<p>I'm energised rather than thrown by ambiguous problems.</p>" }
+  - { id: 11, type: likert, trait: adaptability,    text: "<p>I pick up unfamiliar tools and methods quickly.</p>" }
+  - { id: 12, type: likert, trait: adaptability, reverse: true, text: "<p>Sudden changes to a plan tend to unsettle me.</p>" }
+
+  # ---- Empathy ----
+  - { id: 13, type: likert, trait: empathy,         text: "<p>I notice when a teammate is struggling before they say anything.</p>" }
+  - { id: 14, type: likert, trait: empathy,         text: "<p>I read the mood of a client and respond to it.</p>" }
+  - { id: 15, type: likert, trait: empathy,         text: "<p>I make space for quieter voices in a discussion.</p>" }
+  - { id: 16, type: likert, trait: empathy, reverse: true, text: "<p>I find it hard to tell how others are feeling at work.</p>" }
+
+  # ---- Teamwork ----
+  - { id: 17, type: likert, trait: teamwork,        text: "<p>I put the team's result ahead of personal recognition.</p>" }
+  - { id: 18, type: likert, trait: teamwork,        text: "<p>I willingly take on the unglamorous part of a shared task.</p>" }
+  - { id: 19, type: likert, trait: teamwork,        text: "<p>I build on others' ideas rather than competing with them.</p>" }
+  - { id: 20, type: likert, trait: teamwork, reverse: true, text: "<p>I'd rather work alone than depend on a team.</p>" }
+
+  # ---- Time management ----
+  - { id: 21, type: likert, trait: time_management, text: "<p>I plan my week so deadlines never sneak up on me.</p>" }
+  - { id: 22, type: likert, trait: time_management, text: "<p>I ruthlessly prioritise the few things that matter most.</p>" }
+  - { id: 23, type: likert, trait: time_management, text: "<p>I protect the quality of my work even under time pressure.</p>" }
+  - { id: 24, type: likert, trait: time_management, reverse: true, text: "<p>I often leave important tasks until the last minute.</p>" }
+
+  # ---- Cognitive style ----
+  - { id: 25, type: likert, trait: cognitive,       text: "<p>I instinctively structure a messy problem before diving in.</p>" }
+  - { id: 26, type: likert, trait: cognitive,       text: "<p>I look for the root cause rather than the obvious symptom.</p>" }
+  - { id: 27, type: likert, trait: cognitive,       text: "<p>I test my own assumptions before committing to an answer.</p>" }
+  - { id: 28, type: likert, trait: cognitive, reverse: true, text: "<p>I tend to jump to a solution before analysing the problem.</p>" }
+
+  # ---- Multi-select (SJT-style), scored per option ----
+  - id: 29
+    type: multi-select
+    maxSelections: 2
+    text: |
+      <p>A client meeting is going off track. Select the <strong>two</strong> things
+      you'd most likely do.</p>
+    options:
+      - { text: "Step in and re-focus the group on the objective", trait: leadership }
+      - { text: "Summarise where we are so everyone is aligned",    trait: communication }
+      - { text: "Read the room and ease the tension first",         trait: empathy }
+      - { text: "Re-prioritise the agenda to fit the time left",    trait: time_management }
+
+  - id: 30
+    type: multi-select
+    maxSelections: 2
+    text: |
+      <p>Your team is about to miss a key deadline. Select the <strong>two</strong>
+      things you'd most likely do.</p>
+    options:
+      - { text: "Re-scope to deliver the most important part first", trait: time_management }
+      - { text: "Rally the team and keep momentum up",               trait: leadership }
+      - { text: "Check who's overloaded and redistribute work",      trait: empathy }
+      - { text: "Break the problem down to find the bottleneck",     trait: cognitive }

@@ -1,0 +1,37 @@
+title: Consulting Personality Practice
+subtitle: Personality Test 2
+section: How others see you
+quizNumber: 2
+test: 2
+scoring: trait
+format: rating          # ordered-band single-select (how others rate you)
+practiceMode: 0
+testMode: 0
+
+# Test 2 asks how someone who has worked with you would rate you, on varied
+# ordered scales (percentile / frequency / speed / behavior). One trait per
+# question; 15 items. The platform compares this profile against Test 1.
+# Scales: percentile | frequency | speed | behavior (or inline `options`).
+
+questions:
+  - { id: 1,  type: rating, trait: leadership,      scale: percentile, text: "<p>How would someone familiar with you describe your effectiveness at stepping up to lead when no one else does?</p>" }
+  - { id: 2,  type: rating, trait: leadership,      scale: behavior,   text: "<p>If someone who worked closely with you were asked, how often would they say you take charge in ambiguous situations?</p>" }
+  - { id: 3,  type: rating, trait: leadership,      scale: percentile, text: "<p>How would someone familiar with you describe your effectiveness at driving a project forward?</p>" }
+
+  - { id: 4,  type: rating, trait: communication,   scale: behavior,   text: "<p>If someone who worked closely with you were asked, how often would they say you clearly and effectively communicate complex ideas during group discussions?</p>" }
+  - { id: 5,  type: rating, trait: communication,   scale: frequency,  text: "<p>How frequently would a recent colleague say you keep everyone clearly informed?</p>" }
+
+  - { id: 6,  type: rating, trait: adaptability,    scale: percentile, text: "<p>How would someone familiar with you describe your effectiveness at adapting when plans change?</p>" }
+  - { id: 7,  type: rating, trait: adaptability,    scale: behavior,   text: "<p>If someone who worked closely with you were asked, how often would they say you stay composed in open-ended, ambiguous work?</p>" }
+
+  - { id: 8,  type: rating, trait: empathy,         scale: behavior,   text: "<p>If someone who worked closely with you were asked, how often would they say you notice when others are under pressure?</p>" }
+  - { id: 9,  type: rating, trait: empathy,         scale: percentile, text: "<p>How would someone familiar with you describe your effectiveness at building trust with people?</p>" }
+
+  - { id: 10, type: rating, trait: teamwork,        scale: frequency,  text: "<p>How frequently would a recent colleague say you put the team's success ahead of your own credit?</p>" }
+  - { id: 11, type: rating, trait: teamwork,        scale: behavior,   text: "<p>If someone who worked closely with you were asked, how often would they say you collaborate well within a group?</p>" }
+
+  - { id: 12, type: rating, trait: time_management, scale: frequency,  text: "<p>How frequently would a recent professor or instructor say you complete assignments by the deadline?</p>" }
+  - { id: 13, type: rating, trait: time_management, scale: percentile, text: "<p>How would someone familiar with you describe your effectiveness at managing competing priorities?</p>" }
+
+  - { id: 14, type: rating, trait: cognitive,       scale: speed,      text: "<p>How would a recent professor or instructor describe your speed in solving challenging problems?</p>" }
+  - { id: 15, type: rating, trait: cognitive,       scale: percentile, text: "<p>How would someone familiar with you describe your effectiveness at structuring a problem before solving it?</p>" }
