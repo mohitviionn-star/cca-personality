@@ -135,7 +135,10 @@ export default function Results({
               <p className="text-sm text-neutral-500">Test 1 (self) compared with Test 2 (others).</p>
             </div>
             <div className="text-right">
-              <div className={`text-3xl font-bold ${feedback.consistencyScore >= 80 ? "text-brand" : "text-amber-500"}`}>
+              <div
+                data-testid="consistency-score"
+                className={`text-3xl font-bold ${feedback.consistencyScore >= 80 ? "text-brand" : "text-amber-500"}`}
+              >
                 {feedback.consistencyScore}
               </div>
               <div className="text-xs text-neutral-400">/ 100</div>

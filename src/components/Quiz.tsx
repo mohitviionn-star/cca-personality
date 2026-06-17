@@ -307,6 +307,7 @@ export default function QuizRunner({
                     <button
                       key={idx}
                       type="button"
+                      data-testid="fc-statement"
                       onClick={() => pickFC(q.id, idx, q.statements.length)}
                       className="block w-full rounded-xl border border-neutral-200 bg-neutral-50 px-5 py-4 text-center text-neutral-700 transition hover:border-brand hover:bg-brand/5 hover:shadow-sm"
                     >
@@ -324,6 +325,7 @@ export default function QuizRunner({
               <button
                 key={idx}
                 type="button"
+                data-testid="rating-option"
                 onClick={() => pickRating(q.id, idx)}
                 className={`block w-full rounded-xl border px-5 py-4 text-center transition hover:shadow-sm ${
                   a === idx
