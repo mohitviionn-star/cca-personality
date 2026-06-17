@@ -19,7 +19,7 @@ export async function loadQuiz(quizId: string): Promise<Quiz> {
   return data;
 }
 
-function validate(quiz: Quiz, quizId: string): void {
+export function validate(quiz: Quiz, quizId: string): void {
   const errs: string[] = [];
   if (!quiz || typeof quiz !== "object") errs.push("file is empty or not an object");
   if (!Array.isArray(quiz.questions) || quiz.questions.length === 0)
